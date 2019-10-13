@@ -43,12 +43,12 @@ function checkBills (customer) {
     })
     .then((customerObj) => {
         let balQuery = [customerObj.balance];
-        client.query(updateBalQuery, balQuery, (err, res) => {
+        client.query(updateBalQuery, balQuery, [customerObj._id], (err, res) => {
             if (err) {
                 console.error("Some error occurred with updating the balance");
             }
             else {
-                console.log("Balance updated correctly to " +balQuery);
+                console.log("Balance updated correctly to " + balQuery);
             }
         });
     })
@@ -64,7 +64,7 @@ function searchDB(req) {
             client.query(searchQuery, searchTerm)
                 .then(res => {
                     if (!res.rows[0]) {//if we get no response
-                        console.log("No respone found for search query " +searchTerm);//do nothing
+                        console.log("No response found for search query " +searchTerm);//do nothing
                     }
                     else {
                         console.log("Checking customer data");
