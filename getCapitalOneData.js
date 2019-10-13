@@ -1,10 +1,10 @@
 const {Client} = require("pg");
+var request = require('superagent');
 const client = new Client({//postgres connection data
 user: 'postgres',
 password: 'Chefsearchdb',
 database: 'capitalone'});
 
-var flag = true;
 
 const searchQuery = "SELECT * FROM accounts WHERE ID = $1"; //base query for searching db for if account is inside already
 const insertQuery = "INSERT INTO accounts VALUES($1, $2, $3, $4, $5)"; //base query for inserting new accounts
@@ -15,6 +15,13 @@ const accountUrl1 = 'http://api.reimaginebanking.com/customers/';
 // 5da1ec58322fa016762f31a6
 const accountUrl2 = '/accounts?key=8098dd967b0a31b756d628198b7e3119';
 
+const connection =  client.connect(err => { //start postgres db connection
+	if (err) {
+		console.log('oops!\n', err.stack)}
+	else {
+		console.log('connection success!')}
+});
+
 function sendInsertRequest() {
 
 }
@@ -22,6 +29,7 @@ function sendInsertRequest() {
 function checkBills (customer) {
     return new Promise ((resolve, reject) => {
         let accountUrl = accountUrl1 + customer._id + accountUrl2;
+        console.log("About to send new account request for " + customer._id);
         request.get(accountUrl)
         .end((err, res) => {
             if(res != null) {
@@ -42,21 +50,17 @@ function checkBills (customer) {
             else {
                 console.log("Balance updated correctly to " +balQuery);
             }
-        })
-        .finally(() => {
-            flag = false;
         });
     })
 }
 
-function searchDB(res) {
+function searchDB(req) {
     return new Promise((resolve, reject) => {
-        let obj = Array.from(res);
+        let obj = Array.from(req);
         for (let i = 0; i < obj.length; ++i){   
-            // console.log(obj[i]);
-            // let customer = obj[i];
-            console.log("Customer is " + obj[i]._id);
+            // let i = 0;
             let searchTerm = obj[i]._id;
+            console.log("Customer is " + searchTerm);
             client.query(searchQuery, searchTerm)
                 .then(res => {
                     if (!res.rows[0]) {//if we get no response
@@ -69,9 +73,11 @@ function searchDB(res) {
                 })
         }
     })
+    .then(output => {
+        console.log("Trying " + output);
+    })
 }
 
-var request = require('superagent');
 function sendRequest() {
     return new Promise ((resolve, reject) => {
         request.get('http://api.reimaginebanking.com/customers?key=8098dd967b0a31b756d628198b7e3119')
@@ -95,10 +101,7 @@ function sendRequest() {
         // setTimeout(6000);
     })
     .finally(() => {
-        // while(flag) {
-
-        // }
-        // sendRequest();
+        console.log("Testing, testing");
     });
 }
 
