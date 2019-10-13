@@ -1,0 +1,4 @@
+2019/10/12 19:11:17:329 Postman-1570921770852 Swapping the old app with new one
+2019/10/12 19:11:17:336 Postman-1570921770852 Swapping done
+2019/10/12 19:11:17:403 Postman-1570921770852 Parent process is alive, killing it now
+2019/10/12 19:11:17:404 Postman-1570921770852 Launching app with command /home/mani/Repos/gogo_power_rangers2019/Postman/app/Postman --updated --eID=Postman-1570921770852
