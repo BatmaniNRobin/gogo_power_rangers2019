@@ -42,7 +42,7 @@ function checkBills (customer) {
         });
     })
     .then((customerObj) => {
-        let balQuery = customerObj.balance;
+        let balQuery = [customerObj.balance];
         client.query(updateBalQuery, balQuery, (err, res) => {
             if (err) {
                 console.error("Some error occurred with updating the balance");
@@ -59,7 +59,7 @@ function searchDB(req) {
         let obj = Array.from(req);
         for (let i = 0; i < obj.length; ++i){   
             // let i = 0;
-            let searchTerm = obj[i]._id;
+            let searchTerm = [obj[i]._id];
             console.log("Customer is " + searchTerm);
             client.query(searchQuery, searchTerm)
                 .then(res => {
